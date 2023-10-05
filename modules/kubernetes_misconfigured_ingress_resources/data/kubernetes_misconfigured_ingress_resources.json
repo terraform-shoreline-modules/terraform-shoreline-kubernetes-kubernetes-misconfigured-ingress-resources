@@ -1,0 +1,122 @@
+{
+  "name": "kubernetes_misconfigured_ingress_resources",
+  "description": "Misconfigured Ingress Resources is an incident type that occurs when the Ingress resources in a Kubernetes cluster are not properly configured, resulting in routing or security issues. Ingress resources are used to manage external access to services in a cluster, and when not configured correctly, can cause issues such as incorrect routing of traffic or unauthorized access to resources. This can result in service disruptions, security breaches, and other problems that can impact the overall performance and stability of the system.",
+  "params": [
+    {
+      "name": "INGRESS_NAME",
+      "value": ""
+    },
+    {
+      "name": "LABEL_SELECTOR",
+      "value": ""
+    },
+    {
+      "name": "NAMESPACE",
+      "value": ""
+    },
+    {
+      "name": "PATH_TO_KUBECONFIG_FILE",
+      "value": ""
+    },
+    {
+      "name": "INGRESS_CONFIG_FILE",
+      "value": ""
+    },
+    {
+      "name": "K8S_CLUSTER_NAME",
+      "value": ""
+    }
+  ],
+  "cells": [
+    {
+      "name": "cell_1",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Kubernetes - Misconfigured Ingress Resources\nMisconfigured Ingress Resources is an incident type that occurs when the Ingress resources in a Kubernetes cluster are not properly configured, resulting in routing or security issues. Ingress resources are used to manage external access to services in a cluster, and when not configured correctly, can cause issues such as incorrect routing of traffic or unauthorized access to resources. This can result in service disruptions, security breaches, and other problems that can impact the overall performance and stability of the system."
+    },
+    {
+      "name": "cell_2",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check if the ingress controller is running"
+    },
+    {
+      "name": "cell_3",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "pod | k8s_cluster_name=$K8S_CLUSTER_NAME | app='shoreline' | limit=1 | random=1 | `kubectl get pods -n ${NAMESPACE} -l ${LABEL_SELECTOR}`"
+    },
+    {
+      "name": "cell_4",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check if the ingress resources are correctly configured"
+    },
+    {
+      "name": "cell_5",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "pod | k8s_cluster_name=$K8S_CLUSTER_NAME | app='shoreline' | limit=1 | random=1 | `kubectl describe ingress ${INGRESS_NAME} -n ${NAMESPACE}`"
+    },
+    {
+      "name": "cell_6",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check if the ingress resources have all the required annotations"
+    },
+    {
+      "name": "cell_7",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "pod | k8s_cluster_name=$K8S_CLUSTER_NAME | app='shoreline' | limit=1 | random=1 | `kubectl describe ingress ${INGRESS_NAME} -n ${NAMESPACE} | grep -i annotation`"
+    },
+    {
+      "name": "cell_8",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check if the ingress resources have the correct backend service and port"
+    },
+    {
+      "name": "cell_9",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "pod | k8s_cluster_name=$K8S_CLUSTER_NAME | app='shoreline' | limit=1 | random=1 | `kubectl describe ingress ${INGRESS_NAME} -n ${NAMESPACE} | grep -i backend`"
+    },
+    {
+      "name": "cell_10",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check if the ingress resources have the correct rules and paths"
+    },
+    {
+      "name": "cell_11",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "pod | k8s_cluster_name=$K8S_CLUSTER_NAME | app='shoreline' | limit=1 | random=1 | `kubectl describe ingress ${INGRESS_NAME} -n ${NAMESPACE} | grep -i rule`"
+    },
+    {
+      "name": "cell_12",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## The Ingress resource was not properly configured with the appropriate routing rules and security policies."
+    },
+    {
+      "name": "cell_13",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "pod | k8s_cluster_name=$K8S_CLUSTER_NAME | app='shoreline' | random=1 | limit=1 | invoke_ingress_check($INGRESS_NAME, $NAMESPACE, $PATH_TO_KUBECONFIG_FILE)"
+    },
+    {
+      "name": "cell_14",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Re-deploy the ingress resources to ensure that they are correctly configured and functional."
+    },
+    {
+      "name": "cell_15",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "pod | k8s_cluster_name=$K8S_CLUSTER_NAME | app='shoreline' | random=1 | limit=1 | invoke_redeploy_ingress_resources($INGRESS_NAME, $NAMESPACE, $INGRESS_CONFIG_FILE)"
+    }
+  ]
+}
